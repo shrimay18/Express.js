@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 
 app.use(express.json());
+// app.use(middleware);
+app.use(loggerMiddleware);
 let courses = [
     { id: 1, name: 'java' },
     { id: 2, name: 'javascript' },
@@ -41,6 +43,21 @@ app.delete('/courses/:id',(req,res)=>{
     }
 });
 
+
+function middleware(req,res,next){
+    console.log('Middleware function is called');
+    next();
+}
+
+function loggerMiddleware(req,res,next){
+    const method = req.method;
+    const ip = req.ip;
+    const hostname = req.hostname;
+    const date = new Date().toISOString();
+
+    console.log(`[${date}] ${method} request from ${ip} to ${hostname}`);
+    next();
+}
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');
 });
